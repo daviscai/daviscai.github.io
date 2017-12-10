@@ -1,0 +1,1088 @@
+<!--
+    Powered By nodePPT - This is probably the best web presentation tool so far!
+    version: 1.4.2
+    site: https://github.com/ksky521/nodePPT
+    date: 2017.3.14
+-->
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ECMAscript2015 进阶介绍 - By @蚊子</title>
+    <link rel="stylesheet" media="all" href="./css/nodeppt.css">
+    <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="./css/phone.css">
+    
+    <link rel="stylesheet" href="./js/highlight/styles/monokai_sublime.css">
+    <link rel="stylesheet" href="./css/font-awesome.css">
+    
+<link rel="stylesheet" href="./css/theme.dark.css">
+</head>
+<body>
+<div class="slides">
+    <slides id="container">
+        <slide class="slide"><section class="slide-wrapper"><hgroup>
+<h2>ES6/ECMAScript2015 介绍</h2>
+<h5>不一样的Javascript 进阶</h5>
+
+</hgroup><article>
+
+<h6>@蚊子</h6>
+
+</article></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><div class="magic"><div class="magicItem current pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h2><a href="http://ppt.wenzzz.com/node/es6_base/" target="_blank">基础</a></h2>
+
+</hgroup><article>
+
+<ul>
+<li>块级作用域</li>
+<li>变量的解构赋值</li>
+<li>字符串的扩展</li>
+<li>正则的扩展</li>
+<li>Math对象的扩展</li>
+<li>Number对象的扩展</li>
+<li>数组的扩展</li>
+<li>扩展运算符</li>
+<li>函数绑定</li>
+<li>箭头函数</li>
+<li>for...of 循环</li>
+<li>Set &amp; Map</li>
+<li>Iterator迭代器</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h2>进阶</h2>
+
+</hgroup><article>
+
+<ul>
+<li>Generator函数</li>
+<li>Promise</li>
+<li>Async异步函数</li>
+<li>Class</li>
+<li>模块化</li>
+<li>Proxy函数劫持</li>
+<li>Reflect</li>
+<li>Symbol</li>
+</ul>
+
+</article>
+</div>
+</article></div></div></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><div class="magic"><div class="magicItem current pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h2>回调地狱 callback hell</h2>
+
+</hgroup><article>
+
+<pre><code>fs.readdir(source, function (err, files) {
+  if (err) {
+    console.log(&#39;Error finding files: &#39; + err)
+  } else {
+    files.forEach(function (filename, fileIndex) {
+      console.log(filename)
+      gm(source + filename).size(function (err, values) {
+        if (err) {
+          console.log(&#39;Error identifying file size: &#39; + err)
+        } else {
+          console.log(filename + &#39; : &#39; + values)
+          aspect = (values.width / values.height)
+          widths.forEach(function (width, widthIndex) {
+            height = Math.round(width / aspect)
+            console.log(&#39;resizing &#39; + filename + &#39;to &#39; + height + &#39;x&#39; + height)
+            this.resize(width, height).write(dest + &#39;w&#39; + width + &#39;_&#39; + filename, function(err) {
+              if (err) console.log(&#39;Error writing file: &#39; + err)
+            })
+          }.bind(this))
+        }
+      })
+    })
+  }
+})
+</code></pre>
+</article>
+</div>
+</article></div>
+<div class="magicItem next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>产生的原因和问题</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>Node.js 单进程和异步I/O带来了高性能，同时，异步I/O带来了地狱般的回调</li>
+<li>只要有异步操作，就需要在回调里处理业务，多个异步操作时就会出现回调地狱</li>
+<li>node.js 异步操作非常普遍，读写cookie，写日志，读写数据库，访问文件系统，调用第三方接口等等</li>
+<li>异步操作也改变了串行的编程思维习惯，回调嵌套太多，代码可读性差，维护难</li>
+<li>所以，Generator、Promise、Async都是为了解决这个问题，共同的目标：<code>用同步代码写异步流程</code></li>
+<li>目前已经实现了目标，有了非常好的解决方案，不用再担心回调地狱问题了</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem far-next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>如何解决回调地狱问题</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>初级解决方案：Generator &amp; yield : co </li>
+<li>高级解决方案：Promise : bluebird, Q, ES6.promise</li>
+<li>终极解决方案：Async/await : Promise + Generator 的语法糖</li>
+</ul>
+
+</article>
+</div>
+</article></div></div></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><div class="magic"><div class="magicItem current pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<article>
+<h2>初级解决方案 - Generator函数 &amp; yield</h2>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>理解Generator函数</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>形式上，Generator 函数是一个普通函数，一个分段执行的函数<pre><code>function* helloWorldGenerator() {
+  yield &#39;hello&#39;;
+  yield &#39;world&#39;;
+  return &#39;ending&#39;;
+}
+</code></pre></li>
+<li>Generator 函数会返回一个遍历器对象，而不是函数的运行结果<pre><code>var hw = helloWorldGenerator();
+hw.next()  // { value: &#39;hello&#39;, done: false }
+hw.next()  // { value: &#39;world&#39;, done: false }
+hw.next()  // { value: &#39;ending&#39;, done: true }
+hw.next()  // { value: undefined, done: true }
+</code></pre></li>
+<li>换言之，Generator函数是分段执行的，yield语句是暂停执行的标记，而next方法可以恢复执行。</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem far-next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>yield语句</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>在Generator函数内使用，作用是暂停当前执行的线程，启用一个用户空间线程（<a href="https://github.com/daviscai/get-node/blob/master/understand/js_thread.md" target="_blank">协程</a>）去执行yield语句后面的代码。</li>
+<li>yield语句后面的表达式，只有当调用next方法时才会执行。（co库就是解决这问题）</li>
+<li>Generator函数可以不用yield语句，这时就变成了一个单纯的暂缓执行函数。<pre><code>function* f() {
+  console.log(&#39;执行了！&#39;)
+}
+var generator = f();
+setTimeout(function () {
+  generator.next()
+}, 2000);
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>yield* 语句</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li><p>在 Generator 函数内部调用另一个 Generator 函数是没有效果的。</p>
+<pre><code>function* foo() {
+
+}
+function* bar() {
+  yield &#39;x&#39;;
+  foo();
+  yield &#39;y&#39;;
+}
+</code></pre></li>
+<li>yield* 语句可以，可实现递归调用<pre><code>function* bar() {
+  yield &#39;x&#39;;
+  yield* foo();
+  yield &#39;y&#39;;
+}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Generator函数原型与this</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li><p>Generator函数也有prototype属性，同样可以继承原型方法。</p>
+<pre><code>function* g() {
+
+}
+g.prototype.hello = function () {
+  return &#39;hi!&#39;;
+};
+let obj = g();
+obj instanceof g // true
+obj.hello() // hi!
+</code></pre></li>
+<li>Generator函数总是返回一个遍历器对象，而不是this对象<pre><code>function* g() {
+  this.a = 11;
+}
+let obj = g();
+obj.a // undefined
+</code></pre></li>
+<li>Generator函数不能跟new命令一起用，会报错。</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>应用 - 异步操作的同步化表达</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li><p>利用Generator函数和yield语句可以代替异步回调</p>
+<pre><code>function* loadUI() {
+  showLoadingScreen();
+  yield loadUIDataAsynchronously();
+  hideLoadingScreen();
+}
+var loader = loadUI();
+
+loader.next();  // 加载UI
+loader.next();  // 卸载UI
+</code></pre></li>
+<li>用Generator函数逐行读取文本文件<pre><code>function* numbers() {
+  let file = new FileReader(&quot;numbers.txt&quot;);
+  try {
+    while(!file.eof) {
+      yield parseInt(file.readLine(), 10);
+    }
+  } finally {
+    file.close();
+  }
+}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>应用 - 控制流管理</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>如果有一个多步操作非常耗时，采用回调函数，可能会写成下面这样<pre><code>step1(function (value1) {
+  step2(value1, function(value2) {
+    step3(value2, function(value3) {
+      step4(value3, function(value4) {
+        // Do something with value4
+      });
+    });
+  });
+});
+</code></pre></li>
+<li>Generator函数可以进一步改善代码运行流程<pre><code>function* longRunningTask(value1) {
+  try {
+    var value2 = yield step1(value1);
+    var value3 = yield step2(value2);
+    var value4 = yield step3(value3);
+    var value5 = yield step4(value4);
+    // Do something with value4
+  } catch (e) {
+    // Handle any error from step1 through step4
+  }
+}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div></div></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><div class="magic"><div class="magicItem current pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<article>
+<h2>高级解决方案 - Promise</h2>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise 是什么</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>Promise 是异步编程的一种解决方案，解决回调地狱</li>
+<li>Promise 是一个对象，提供统一的接口，返回的也是一个Promise对象</li>
+<li>Promise接口返回的对象要么是执行完成的结果（Resolved），要么是执行失败的结果（Rejected）</li>
+<li><p>ES6规定，Promise对象是一个构造函数，用来生成Promise实例</p>
+<pre><code>var promise = new Promise(function(resolve, reject) {
+  // ... some code
+
+  if (1){
+    resolve(&#39;aaa&#39;);
+  } else {
+    reject(error);
+  }
+});
+console.log(promise)
+// Promise {[[PromiseStatus]]: &quot;resolved&quot;, [[PromiseValue]]: &quot;aaa&quot;}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem far-next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise 如何解决回调问题</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li><p>Promise实例生成以后，可以用then方法分别指定Resolved状态和Reject状态的回调函数。</p>
+<pre><code>var promise = new Promise(function(resolve, reject) {resolve(&#39;aaa&#39;)});
+promise.then(function(value) {
+  // success
+  console.log(value); // 输出 aaa, 如果调用resolve函数和reject函数时带有参数，那么它们的参数会被传递给回调函数
+}, function(error) {
+  // failure
+});
+</code></pre></li>
+<li>Promise实例的状态变为Resolved，就会触发then方法绑定的回调函数</li>
+<li>then方法指定的回调函数，将在当前脚本所有同步任务执行完才会执行</li>
+<li>Promise实现机制有多种规范，目前主流实现都遵循 Promise/A+规范，比如 bluebird, ES6.promise</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise 解决回调问题实例</h3>
+
+</hgroup><article>
+
+<ul>
+<li><p>异步加载图片</p>
+<pre><code>function loadImageAsync(url) {
+  return new Promise(function(resolve, reject) {
+    var image = new Image();
+    // 加载成功
+    image.onload = function() {
+      resolve(image);
+    };
+    // 加载失败
+    image.onerror = function() {
+      reject(new Error(&#39;Could not load image at &#39; + url));
+    };
+
+    image.src = url;
+  });
+}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.resolve</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>Promise.resolve等价于下面的写法 <pre><code>Promise.resolve(&#39;foo&#39;)
+// 等价于
+new Promise(resolve =&gt; resolve(&#39;foo&#39;))
+</code></pre></li>
+<li>将现有对象转为Promise对象<pre><code>// 将jQuery生成的deferred对象，转为一个新的Promise对象
+var jsPromise = Promise.resolve($.ajax(&#39;/whatever.json&#39;));
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.resolve 参数</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>参数是一个Promise实例，直接返回该实例 </li>
+<li>参数是一个thenable对象，thenable对象指的是具有then方法的对象<pre><code>let thenable = {
+  then: function(resolve, reject) {
+    resolve(42);
+  }
+};
+let p1 = Promise.resolve(thenable);
+p1.then(function(value) {
+  console.log(value);  // 42
+});
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.resolve 参数</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>参数不是具有then方法的对象，返回一个新的Promise对象，状态为Resolved<pre><code>var p = Promise.resolve(&#39;Hello&#39;);
+p.then(function (s){
+  console.log(s)
+});
+// Hello
+</code></pre></li>
+<li>不带有任何参数, 直接返回一个Resolved状态的Promise对象<pre><code>var p = Promise.resolve();
+p.then(function () {
+  // ...
+});
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.reject</h3>
+
+</hgroup><article>
+
+<ul>
+<li><p>Promise.reject(reason)方法也会返回一个新的 Promise 实例，该实例的状态为rejected</p>
+<pre><code>var p = Promise.reject(&#39;出错了&#39;);
+// 等同于
+var p = new Promise((resolve, reject) =&gt; reject(&#39;出错了&#39;))
+
+p.then(null, function (s) {
+  console.log(s)
+});
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.catch</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>如果异步操作抛出错误，状态就会变为Rejected，就会调用catch方法指定的回调函数 <pre><code>var promise = new Promise(
+  function(resolve, reject) {
+    throw new Error(&#39;test&#39;);
+    // 或者 reject(new Error(&#39;test&#39;));
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+// Error: test
+</code></pre></li>
+<li>建议总是使用catch方法，而不使用then方法的第二个参数reject来处理异常错误</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.all</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例 <pre><code>// p1、p2、p3都是 Promise 实例
+var p = Promise.all([p1, p2, p3]);
+</code></pre></li>
+<li>p的状态由p1、p2、p3决定，分成两种情况<pre><code>1. 只有p1、p2、p3的状态都变成fulfilled，p的状态才会变成fulfilled
+2. 只要p1、p2、p3之中有一个被rejected，p的状态就变成rejected
+</code></pre></li>
+<li><p>例子</p>
+<pre><code>// 生成一个Promise对象的数组
+var promises = [2, 3, 5, 7, 11, 13].map(function (id) {
+  return getJSON(&#39;/post/&#39; + id + &quot;.json&quot;);
+});
+
+Promise.all(promises).then(function (posts) {
+  // ...
+}).catch(function(reason){
+  // ...
+});
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise.race</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>Promise.race方法同样是将多个Promise实例，包装成一个新的Promise实例<pre><code>// p1、p2、p3都是 Promise 实例
+var p = Promise.all([p1, p2, p3]);
+</code></pre></li>
+<li>只要p1、p2、p3之中有一个实例率先改变状态，p的状态就跟着改变。那个率先改变的 Promise 实例的返回值，就传递给p的回调函数</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Promise 应用场景</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>异步请求，使用promise可以使执行流程清晰明了</li>
+<li>需要管道，管道指当前任务的输出可以作为下一个任务的输入，形成一条数据管道，then方法</li>
+</ul>
+
+</article>
+</div>
+</article></div></div></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><div class="magic"><div class="magicItem current pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<article>
+<h2>终极解决方案 - async/await</h2>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>async 函数是什么</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>ES2017 标准引入了 async 函数，使得异步操作变得更加方便</li>
+<li>它就是 Generator 函数的语法糖 + Promise 返回值</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem far-next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>例子：读取文件</h3>
+
+</hgroup><article>
+
+<ul>
+<li><p>Generator 函数版本</p>
+<pre><code>var fs = require(&#39;fs&#39;);
+var readFile = function (fileName) {
+  return new Promise(function (resolve, reject) {
+    fs.readFile(fileName, function(error, data) {
+      if (error) reject(error);
+      resolve(data);
+    });
+  });
+};
+
+var gen = function* () {
+  var f1 = yield readFile(&#39;/etc/fstab&#39;);
+  var f2 = yield readFile(&#39;/etc/shells&#39;);
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<article>
+
+<ul>
+<li>Async函数版本<pre><code>var fs = require(&#39;fs&#39;);
+var readFile = function (fileName) {
+  return new Promise(function (resolve, reject) {
+    fs.readFile(fileName, function(error, data) {
+      if (error) reject(error);
+      resolve(data);
+    });
+  });
+};
+var asyncReadFile = async function () {
+  var f1 = await readFile(&#39;/etc/fstab&#39;);
+  var f2 = await readFile(&#39;/etc/shells&#39;);
+  console.log(f1.toString());
+  console.log(f2.toString());
+};
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Async函数对 Generator 函数的改进，体现在以下四点</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>内置执行器，Generator 函数需要借助co等库才能做到</li>
+<li>更好的语义，async和await，比起星号和yield，语义更清楚</li>
+<li>更广的适用性，async函数的await命令后面，可以是Promise 对象和原始类型的值（数值、字符串和布尔值，但这时等同于同步操作）</li>
+<li>返回值是 Promise，比 Generator 函数的返回值是 Iterator 对象方便多了</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>async 函数使用形式</h3>
+
+</hgroup><article>
+
+<pre><code>// 函数声明
+async function foo() {}
+
+// 函数表达式
+const foo = async function () {};
+
+// 对象的方法
+let obj = { async foo() {} };
+obj.foo().then(...)
+
+// Class 的方法
+class Storage {
+  async getAvatar(name) {
+    const cache = await cachePromise(name);
+    return cache;
+  }
+}
+const storage = new Storage();
+storage.getAvatar(&#39;jake&#39;).then(…);
+
+// 箭头函数
+const foo = async () =&gt; {};
+</code></pre>
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Async函数的 Promise</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li><p>async函数返回一个 Promise 对象，async函数内部return语句返回的值，会成为then方法回调函数的参数 </p>
+<pre><code>async function f() {
+  return &#39;hello world&#39;;
+}
+
+f().then(v =&gt; console.log(v))
+// &quot;hello world&quot;
+</code></pre></li>
+<li><p>async函数内部抛出错误，会导致返回的 Promise 对象变为reject状态</p>
+<pre><code>async function f() {
+  throw new Error(&#39;出错了&#39;);
+}
+
+f().then(
+  v =&gt; console.log(v),
+  e =&gt; console.log(e)
+)
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Async函数的 Promise</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>只有async函数内部的异步操作执行完，才会执行then方法指定的回调函数 <pre><code>async function getTitle(url) {
+  let response = await fetch(url);  // 抓取网页
+  let html = await response.text(); // 取出文本
+  return html.match(/&lt;title&gt;([\s\S]+)&lt;\/title&gt;/i)[1];
+}
+getTitle(&#39;https://tc39.github.io/ecma262/&#39;).then(console.log)
+// &quot;ECMAScript 2017 Language Specification&quot;
+</code></pre></li>
+<li><p>await命令后面是一个 Promise 对象，如果不是，会被转成一个立即resolve的 Promise 对象</p>
+<pre><code>async function f() {
+  return await 123;
+}
+
+f().then(v =&gt; console.log(v))
+// 123
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>Async函数的 Promise</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>只要一个await语句后面的 Promise 变为reject，那么整个async函数都会中断执行。 <pre><code>async function f() {
+  await Promise.reject(&#39;出错了&#39;);
+  await Promise.resolve(&#39;hello world&#39;); // 不会执行
+}
+</code></pre></li>
+<li>上面问题可以用try...catch来解决<pre><code>async function f() {
+  try {
+    await Promise.reject(&#39;出错了&#39;);
+  } catch(e) {
+  }
+  return await Promise.resolve(&#39;hello world&#39;); // 会执行
+}
+f().then(v =&gt; console.log(v))
+// hello world
+</code></pre></li>
+<li>最佳实践：尽量将await异步操作放在try...catch代码块之中，并在catch里处理异常</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>async 函数的实现原理</h3>
+
+</hgroup><article>
+
+<ul>
+<li><p>async 函数的实现原理，就是将 Generator 函数和自动执行器，包装在一个函数里。</p>
+<pre><code>async function fn(args) {
+  // ...
+}
+
+// 等同于
+function fn(args) {
+  return spawn(function* () {  // spawn函数就是自动执行器
+    // ...
+  });
+}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem "  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>spawn函数</h3>
+
+</hgroup><article>
+
+<ul>
+<li>spawn函数，自动执行器代码<pre><code>function spawn(genF) {
+  return new Promise(function(resolve, reject) {
+    var gen = genF();
+    function step(nextF) {
+      try {
+        var next = nextF();
+      } catch(e) {
+        return reject(e);
+      }
+      if(next.done) {
+        return resolve(next.value);
+      }
+      Promise.resolve(next.value).then(function(v) {
+        step(function() { return gen.next(v); }); // 递归自动执行next
+      }, function(e) {
+        step(function() { return gen.throw(e); });
+      });
+    }
+    step(function() { return gen.next(undefined); });
+  });
+}
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div></div></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><div class="magic"><div class="magicItem current pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<article>
+<h2>Class 类  - 面向对象</h2>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>类声明</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li><p>ES6引入了 Class（类）这个概念，通过class关键字，可以定义类  </p>
+<pre><code>//定义类
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  toString() {
+    return &#39;(&#39; + this.x + &#39;, &#39; + this.y + &#39;)&#39;;
+  }
+}
+var p = new Point(2,3);
+p.toString();
+</code></pre></li>
+<li>方法前面不需要加上function这个关键字</li>
+<li>方法之间不需要逗号分隔</li>
+</ul>
+
+</article>
+</div>
+</article></div>
+<div class="magicItem far-next pagedown"  data-transition="move"><article>
+<div class="magic-wrapper">
+<hgroup>
+<h3>class类与prototype原型</h3>
+
+</hgroup><article>
+
+<ul class="zoomIn">
+<li>函数的prototype属性，在 ES6 的“类”上面继续存在 <pre><code>class Point {
+  constructor() {}
+  toString() {}
+  toValue() {}
+}
+// 等同于
+Point.prototype = {
+  constructor() {},
+  toString() {},
+  toValue() {},
+};
+</code></pre></li>
+<li>通过Object.assign给类添加方法<pre><code>class Point {
+  constructor(){}
+}
+Object.assign(Point.prototype, {
+  toString(){},
+  toValue(){}
+});
+Point.prototype.constructor === Point // true
+</code></pre></li>
+</ul>
+
+</article>
+</div>
+</article></div></div></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><article>
+<h2>模块化</h2>
+
+</article></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><article>
+<h2>Symbol - 第7种数据类型</h2>
+<p>undefined</p>
+
+</article></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><article>
+<h2>Proxy - 函数劫持</h2>
+<p>undefined</p>
+
+</article></section></slide>
+<slide class="slide"   data-on-build="Slide.magic" data-on-enter="Slide.magic.init"><section class="slide-wrapper"><article>
+<h2>Reflect</h2>
+<p>undefined</p>
+
+</article></section></slide>
+<slide class="slide"><section class="slide-wrapper"><hgroup>
+<h2>理解ES6的评判标准是什么？</h2>
+
+</hgroup><article>
+
+<ul class="rollIn">
+<li>理解Promise, Generator, async/await, 并能看懂别人的代码</li>
+<li>理解变量的解构赋值，并能看懂别人的代码</li>
+<li>理解箭头函数，并能看懂别人的代码</li>
+<li>理解面向对象编程Class类，并能看懂别人的代码</li>
+<li>理解iterator迭代器接口</li>
+<li>用模块化方式开发项目</li>
+</ul>
+
+</article></section></slide>
+<slide class="slide"><section class="slide-wrapper"><hgroup>
+<h2>理解ES6的特性的好处</h2>
+
+</hgroup><article>
+
+<ul class="rollIn">
+<li>还用说吗？？ </li>
+<li>学习开源框架或者参与开源项目，会更加轻松愉快</li>
+<li>ES6是前端技术发展的里程碑，理解ES6可以更好地理解ES7, ES8...</li>
+</ul>
+
+</article></section></slide>
+<slide class="slide"><section class="slide-wrapper"><hgroup>
+<h2>谢谢</h2>
+<h4>欢迎关注 <a href="https://github.com/daviscai" target="_blank">github</a></h4>
+
+</hgroup><article>
+
+<h6>本ppt部分内容来自阮一峰老师的<a href="http://es6.ruanyifeng.com/" target="_blank">《ES6标准入门》</a>一书</h6>
+
+</article></section></slide>
+        
+
+        <!-- <slide class="slide logoslide dark nobackground">
+            <article class="flexbox vcenter">
+                <h2 style="color: white;">Powered By nodePPT v1.4.2</h2>
+            </article>
+        </slide> -->
+        <div class="slideTip" id="tip"></div>
+    </slides>
+</div>
+<canvas id="drawBoard" class="draw-board" width="900" height="700"></canvas>
+<div class="progress"><span id="progress"></span></div>
+<div id="_buttons">
+    <div class="_btn-box" id="_btn-box" style="display:none;">
+        <button class="fa fa-arrow-circle-left" id="_btn-prev"></button>
+        <button class="fa fa-arrow-circle-right" id="_btn-next"></button>
+        <button class="fa fa-paint-brush" id="_btn-brush"></button>
+        <button class="fa fa-compress" id="_btn-overview" data-toggle="fa fa-expand"></button>
+    </div>
+    <button class="fa fa-bars" id="_btn-bar"  data-toggle="fa fa-close"></button>
+</div>
+<script src="./js/mixjs/lib/mix.0.3.0.min.js"></script>
+<script>
+var base = location.protocol + '//' + location.host;
+
+var path = (location.pathname + '#').split('/').filter(function(v){
+    return !!v;
+});
+path.pop();
+path = path.join('/');
+MixJS.config({
+    baseURL: [ base, path, 'js'].join('/')+'/'
+});
+
+</script>
+<script src="./js/mixjs/lib/event/broadcast.js"></script>
+<script src="./js/nodeppt.js"></script>
+<script>
+Slide.init({
+    containerID: 'container',
+    drawBoardID: 'drawBoard',
+    slideClass: '.slide',
+    buildClass: '.build',
+    progressID: 'progress',
+    transition: 'slide3',
+    width: 1100,
+    dir: './',
+    
+    //打开下面的注释就开启postMessage方式
+    //访问网址127.0.0.1:8080/ppt/demo#client
+    control:{
+        type: 'postMessage',
+        args:{
+            isControl:  false
+        }
+    },
+    
+    tipID: 'tip'
+});
+MixJS.loadJS('highlight/highlight.pack.js',function(){
+    hljs.tabReplace = '  ';
+    hljs.initHighlightingOnLoad();
+});
+</script>
+
+
+<!-- MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  config: ["TeX-AMS-MML_HTMLorMML.js"],
+  tex2jax: {inlineMath: [['\\(','\\)']]}});
+  //['$','$'], 避免货币价格冲突
+</script>
+<script type="text/javascript" src="./js/mathjax/MathJax.js"></script>
+
+<!--placeholder-->
+</body>
+</html>
